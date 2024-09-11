@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil do Usuário</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: #242424;
+            color: white;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        #avatar {
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+        }
+
+        .light-mode {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        #themeSwitcherImage {
+            width: 30px;
+            height: 30px;
+        }
+
+        #themeSwitcher {
+            border-radius: 50%;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+        }
+
+        #navbar {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            background-color: #333;
+            color: white;
+        }
+
+        #navbar a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        #dashboardbutton {
+            margin-bottom: 10px;
+        }
+
+        span {
+            font-weight: bold;
+        }
+
+        .donotclose {
+            width: 300px;
+            height: 350px;
+            background-color: white;
+            color: black;
+            text-align: center;
+            margin-left: 30%;
+            border-radius: 10px;
+        }
+         .light-mode .donotclose {
+            background-color: #252525;
+            color: white;
+        }
+    </style>
+    <script src="./js/ThemeSwitcher.js"></script>
+</head>
+
+<body>
+    <nav id="navbar">
+        <a id="homebutton" href="/">Home</a>
+        <a id="dashboardbutton" href="/dashboard">DashBoard</a>
+        <button id="themeSwitcher" onclick="themeMode()">
+            <img id="themeSwitcherImage" src="./images/theme.png" alt="Toggle Theme">
+        </button>
+    </nav>
+    <h1>You profile in bot:</h1>
+    <div class="donotclose">
+        <br>
+        <img src="" id="avatar" alt="Avatar">
+        <p>Your Id of Discord: <span id="id"></span></p>
+        <p>Name of account: <span id="name"></span></p>
+        <p>Email: <span id="email"></span></p>
+        <p>Your money: <span id="money"></span></p>
+    </div>
+
+
+    <script>
+        fetch('/profile-data')
+            .then(response => response.json())
+            .then(data => {
+                const defaultText = "No fucking money, get out of here";
+                document.getElementById('avatar').src = `https://cdn.discordapp.com/avatars/${data.id}/${data.avatar}.png`;
+                document.getElementById('id').textContent = data.id;
+                document.getElementById('name').textContent = data.username || 'NaN';
+                document.getElementById('email').textContent = data.email || '(String Undefined)';
+                // Verifica se o dinheiro é 0 e define o texto padrão se for o caso
+                document.getElementById('money').textContent = data.money
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.body.innerHTML = '<h1>Error loading profile data</h1>';
+            });
+    </script>
+</body>
+
+</html>
